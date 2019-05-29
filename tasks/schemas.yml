@@ -1,5 +1,6 @@
 # file: postgresql/tasks/schemas.yml
 
+# See defaults/main.yml for postgresql_database_schemas list
 - name: PostgreSQL | Add Schema to databases
   postgresql_schema:
     database: "{{ item.database }}"

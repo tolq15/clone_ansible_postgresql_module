@@ -1,5 +1,6 @@
 # file: postgresql/tasks/users_privileges.yml
 
+# See defaults/main.yml for list of postgresql_user_privileges
 - name: PostgreSQL | Update the user privileges
   postgresql_user:
     name: "{{item.name}}"

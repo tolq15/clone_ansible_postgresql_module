@@ -5,6 +5,7 @@
     name: "{{ postgresql_service_name }}"
     state: started
 
+# Array with user's names is in /default/main.yml
 - name: PostgreSQL | Make sure the PostgreSQL users are present
   postgresql_user:
     name: "{{item.name}}"

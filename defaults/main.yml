@@ -1,10 +1,14 @@
 # file: postgresql/defaults/main.yml
 
-# Basic settings
+#----------------#
+# Basic settings #
+#----------------#
 postgresql_version: 11
-postgresql_version_terse: "{{ postgresql_version | replace('.', '') }}"  # Short version of the postgresql_version, used in some path and filenames
+# Short version of the postgresql_version, used in some path and filenames
+postgresql_version_terse: "{{ postgresql_version | replace('.', '') }}"  
 postgresql_encoding: "UTF-8"
 postgresql_data_checksums: false
+# Where should it be located?
 postgresql_pwfile: ""
 
 postgresql_locale_parts:
@@ -24,8 +28,11 @@ postgresql_admin_user: "postgres"
 postgresql_default_auth_method: "peer"
 postgresql_default_auth_method_hosts: "md5"
 
+#
 # The user/group that will run postgresql process or service
+#
 postgresql_service_user: "{{ postgresql_admin_user }}"
+# Check this setting? Look at tasks/install_yml.yml
 postgresql_service_user_pgsql_profile: false
 postgresql_service_group: "{{ postgresql_admin_user }}"
 postgresql_service_enabled: true

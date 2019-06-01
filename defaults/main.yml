@@ -32,12 +32,11 @@ postgresql_default_auth_method_hosts: "md5"
 # The user/group that will run postgresql process or service
 #
 postgresql_service_user: "{{ postgresql_admin_user }}"
-# Check this setting? Look at tasks/install_yml.yml
-postgresql_service_user_pgsql_profile: false
 postgresql_service_group: "{{ postgresql_admin_user }}"
 postgresql_service_enabled: true
 
-postgresql_cluster_name: "main"
+# CHANGE CLUSTER NAME! from 'main' to 'whatever'
+postgresql_cluster_name: "cluster01"
 postgresql_cluster_reset: false
 
 postgresql_database_owner: "{{ postgresql_admin_user }}"
@@ -45,30 +44,37 @@ postgresql_database_owner: "{{ postgresql_admin_user }}"
 # Extensions
 postgresql_ext_install_contrib: no
 postgresql_ext_install_dev_headers: no
-postgresql_ext_install_postgis: no
-
-postgresql_ext_postgis_version: "2.5" # be careful: check whether the postgresql/postgis versions work together
-
-postgresql_ext_postgis_deps:
-  - libgeos-c1
-  - "postgresql-{{ postgresql_version }}-postgis-{{ postgresql_ext_postgis_version }}"
-  - "postgresql-{{ postgresql_version }}-postgis-scripts"
-
-# Foreign Data Wrapper(s)
-postgresql_fdw_mysql: no
-postgresql_fdw_ogr: no
 
 # List of databases to be created (optional)
-postgresql_databases: []
+postgresql_databases:
+  - name: sergey01_db
+    owner:sergey01_rl
+
+  - name: tolq01_db
+    owner: tolq01_rl
 
 # List of database extensions to be created (optional)
+# LT: used in 'docker' only
 postgresql_database_extensions: []
 
 # List of users to be created (optional)
-postgresql_users: []
+postgresql_users:
+  - name: tolq01_rl
+    pass: tolq01
+    encrypted: no
+
+  - name: sergey01_rl
+    pass: sergey01
+    encrypted: no
+
 
 # List of schemas to be created (optional)
-postgresql_database_schemas: []
+# What is the format of this structure? See tasks/schemas.yml.
+postgresql_database_schemas:
+  - database: sergey01_db
+    state: present
+    schema: test01_sh
+    owner: sergey01_rl
 
 # List of user privileges to be applied (optional)
 postgresql_user_privileges: []
@@ -245,10 +251,10 @@ postgresql_backend_flush_after:              0   # (>= 9.6) 0 disables, default 
 
 # - Settings -
 
-postgresql_wal_level: "minimal"   # minimal, archive (<= 9.5), hot_standby (<= 9.5), replica (>= 9.6), or logical
+postgresql_wal_level: "replica"   # minimal, archive (<= 9.5), hot_standby (<= 9.5), replica (>= 9.6), or logical
 postgresql_fsync:     on          # flush data to disk for crash safety
-                                          # (turning this off can cause
-                                          # unrecoverable data corruption)
+                                  # (turning this off can cause
+                                  # unrecoverable data corruption)
 
 # Synchronization level:
 # - off
@@ -780,18 +786,6 @@ postgresql_apt_key_url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
 postgresql_apt_repository: "deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main {{ postgresql_version }}"
 # Pin-Priority of PGDG repository
 postgresql_apt_pin_priority: 500
-
-# YUM repository locations
-postgresql_yum_repository_url: "http://yum.postgresql.org"
-postgresql_pgdg_repository_url: "https://download.postgresql.org/pub/repos/yum/"
-
-# YUM (RedHat, CentOS, etc.) baseurl/gpgkey
-postgresql_yum_repository_baseurl: "{{ postgresql_yum_repository_url }}/{{ postgresql_version }}/{{ ansible_os_family | lower }}/rhel-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}"
-postgresql_yum_repository_gpgkey: "{{ postgresql_pgdg_repository_url }}/RPM-GPG-KEY-PGDG-{{ postgresql_version_terse }}"
-
-# DNF (Fedora) baseurl/gpgkey
-postgresql_dnf_repository_baseurl: "{{ postgresql_yum_repository_url }}/{{ postgresql_version }}/fedora/fedora-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}"
-postgresql_dnf_repository_gpgkey: "{{ postgresql_yum_repository_gpgkey }}"
 
 postgresql_apt_py3_dependencies: ["python3-psycopg2", "locales"]
 postgresql_apt_py2_dependencies: ["python-psycopg2", "python-pycurl", "locales"]

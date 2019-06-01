@@ -11,23 +11,9 @@
   when: ansible_pkg_mgr == "apt"
   tags: [postgresql, postgresql-install]
 
-# Check that this task will be skeeped
-- import_tasks: install_yum.yml
-  when: ansible_pkg_mgr == "yum" and ( ansible_distribution == "RedHat" or ansible_distribution == "CentOS" )
-  tags: [postgresql, postgresql-install]
-
-# Check that this task will be skeeped
-- import_tasks: install_dnf.yml
-  when: ansible_pkg_mgr == "dnf" and ansible_distribution == "Fedora"
-  tags: [postgresql, postgresql-install]
-
 # Install additional headers required for extensions
 - import_tasks: extensions.yml
   tags: [postgresql, postgresql-extensions]
-
-# Check that this task will be skeeped
-- import_tasks: fdw.yml
-  tags: [postgresql, postgresql-fdw]
 
 # Check that all required directories exist,
 # all services started or stopped.
@@ -46,11 +32,6 @@
 
 - import_tasks: users_privileges.yml
   tags: [postgresql, postgresql-users]
-
-# Check that this task will be skeeped
-- import_tasks: monit.yml
-  when: monit_protection is defined and monit_protection == true
-  tags: [postgresql, postgresql-monit]
 
 - import_tasks: check_pg_version_mismatch.yml
   tags: [postgresql, postgresql-version-mismatch]

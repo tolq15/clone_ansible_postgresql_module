@@ -7,7 +7,3 @@
 
 - import_tasks: extensions/dev_headers.yml
   when: postgresql_ext_install_dev_headers
-
-# Probably I do not need this
-- import_tasks: extensions/postgis.yml
-  when: postgresql_ext_install_postgis
